@@ -4,20 +4,68 @@ const c = canvas.getContext("2d");
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 
-// player:
-const x = canvas.width / 2;
-const y = canvas.height / 2;
+addEventListener("resize", () => {
+  window.location.reload();
+});
 
-const player = new Player(x, y, 30, "blue");
+// global functions:
+function getPercentage(original, percent) {
+  return (original * percent) / 100;
+}
+
+// player:
+const playerInitPos = {
+  x: canvas.width / 2,
+  y: canvas.height / 2,
+};
+
+const player = new Player(
+  playerInitPos,
+  ((canvas.width + canvas.height) / 2) * 0.03,
+  "blue"
+);
 
 player.show();
 
 // projectile:
+const projectiles = [];
 
+// shoot projectile on click:
 addEventListener("click", (event) => {
-  const x = event.clientX;
-  const y = event.clientY;
+  const projectileInitPos = {
+    ...player.pos,
+  };
 
-  const projectile = new Projectile(x, y, 5, "yellowgreen", null);
-  projectile.show();
+  const angle = Math.atan2(
+    event.clientY - canvas.height / 2,
+    event.clientX - canvas.width / 2
+  );
+
+  const velocity = {
+    x: Math.cos(angle) * player.stats.projectileSpeed,
+    y: Math.sin(angle) * player.stats.projectileSpeed,
+  };
+
+  for (let i = 0; i < player.stats.projectileCount; i++) {
+    setTimeout(() => {
+      projectiles.push(new Projectile(projectileInitPos, 3, "red", velocity));
+    }, 100 * i);
+  }
 });
+
+// animate:
+// animation loop:
+function animate() {
+  c.fillStyle = "rgba(0, 0, 0)";
+  c.globalAlpha = 0.5;
+  c.fillRect(0, 0, canvas.width, canvas.height);
+  c.globalAlpha = 1;
+
+  projectiles.forEach((projectile) => {
+    projectile.update();
+  });
+
+  player.show();
+  requestAnimationFrame(animate);
+}
+animate();

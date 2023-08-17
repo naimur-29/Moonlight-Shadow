@@ -1,16 +1,26 @@
 class Projectile {
-  constructor(x, y, radius, color, velocity) {
-    this.posX = x;
-    this.posY = y;
+  constructor(pos, radius, color, velocity) {
+    this.pos = { ...pos };
     this.radius = radius;
     this.color = color;
-    this.velocity = velocity;
+    this.velocity = { ...velocity };
   }
 
   show() {
-    c.beginPath();
-    c.arc(this.posX, this.posY, this.radius, 0, Math.PI * 2, false);
+    // instance color:
     c.fillStyle = this.color;
+
+    c.beginPath();
+    c.arc(this.pos.x, this.pos.y, this.radius, 0, Math.PI * 2, false);
     c.fill();
+  }
+
+  update() {
+    // update position:
+    this.pos.x += this.velocity.x;
+    this.pos.y += this.velocity.y;
+
+    // redraw the instance:
+    this.show();
   }
 }
