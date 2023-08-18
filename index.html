@@ -6,9 +6,12 @@
     <title>Moonlight Shadow</title>
 
     <!-- Class Scripts -->
+    <script src="./src/Sprite.js" defer></script>
     <script src="./src/Player.js" defer></script>
     <script src="./src/Projectile.js" defer></script>
     <script src="./src/Enemy.js" defer></script>
+    <script src="./src/collisions.js" defer></script>
+    <script src="./src/Boundary.js" defer></script>
 
     <!-- Main Script -->
     <script src="./src/index.js" defer></script>
@@ -17,8 +20,16 @@
     <style>
       body {
         margin: 0;
+        overflow: hidden;
+        background-color: rgba(51, 51, 51);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
       }
     </style>
   </head>
-  <body></body>
+  <body>
+    <canvas></canvas>
+  </body>
 </html>
