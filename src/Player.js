@@ -1,7 +1,7 @@
 class Player {
-  constructor({ sprite, vel }) {
+  constructor({ sprite, stats }) {
     this.sprite = sprite;
-    this.vel = { ...vel };
+    this.stats = { ...stats };
   }
 
   draw() {

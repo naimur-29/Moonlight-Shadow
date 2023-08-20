@@ -4,27 +4,42 @@ const c = canvas.getContext("2d");
 canvas.width = 1024;
 canvas.height = 576;
 
+// STATES:
+let isNight = true;
+
 // load images:
 // BACKGROUND:
 const backgroundImg = new Image();
-backgroundImg.src = "./assets/level_01.png";
+backgroundImg.src = isNight
+  ? "./assets/level_01_night.png"
+  : "./assets/level_01.png";
 
 // foreground:
 const foregroundImg = new Image();
-foregroundImg.src = "./assets/level_01_foreground.png";
+foregroundImg.src = isNight
+  ? "./assets/level_01_foreground_night.png"
+  : "./assets/level_01_foreground.png";
 
 // player:
 const playerDownImage = new Image();
-playerDownImage.src = "./assets/playerDown.png";
+playerDownImage.src = isNight
+  ? "./assets/playerDownNight.png"
+  : "./assets/playerDown.png";
 
 const playerUpImage = new Image();
-playerUpImage.src = "./assets/playerUp.png";
+playerUpImage.src = isNight
+  ? "./assets/playerUpNight.png"
+  : "./assets/playerUp.png";
 
 const playerLeftImage = new Image();
-playerLeftImage.src = "./assets/playerLeft.png";
+playerLeftImage.src = isNight
+  ? "./assets/playerLeftNight.png"
+  : "./assets/playerLeft.png";
 
 const playerRightImage = new Image();
-playerRightImage.src = "./assets/playerRight.png";
+playerRightImage.src = isNight
+  ? "./assets/playerRightNight.png"
+  : "./assets/playerRight.png";
 
 // GLOBAL VARIABLES/CONSTANTS:
 const OFFSET = {
@@ -68,6 +83,12 @@ const PLAYER = new Player({
       right: playerRightImage,
     },
   }),
+  stats: {
+    speed: {
+      x: 3,
+      y: 3,
+    },
+  },
 });
 
 // keeping track of if any movement keys are pressed:
@@ -94,8 +115,8 @@ const boundaries = [];
 
 // collisions:
 const collisionsMap = [];
-for (let i = 0; i < collisions.length; i += 70) {
-  collisionsMap.push(collisions.slice(i, i + 70));
+for (let i = 0; i < COLLISIONS.length; i += 70) {
+  collisionsMap.push(COLLISIONS.slice(i, i + 70));
 }
 
 collisionsMap.forEach((row, i) => {
@@ -116,17 +137,15 @@ MOVABLES = [...MOVABLES, ...boundaries];
 // animation loop:
 function animate() {
   BACKGROUND.draw();
-
   // draw boundaries:
   //   boundaries.forEach((b) => {
   //     b.draw();
   //   });
-
-  PLAYER.draw();
-
-  FOREGROUND.draw();
-
   handlePlayerControl();
+  PLAYER.draw();
+  c.globalAlpha = 0.7;
+  FOREGROUND.draw();
+  c.globalAlpha = 1;
 
   window.requestAnimationFrame(animate);
 }

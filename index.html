@@ -20,18 +20,73 @@
 
     <!-- Main StyleSheet -->
     <style>
+      *,
+      *::before,
+      *::after {
+        overflow: hidden;
+        user-select: none;
+      }
+
       body {
         margin: 0;
-        background-color: rgba(51, 51, 51);
+        background-color: #0f172a;
         display: flex;
         align-items: center;
         justify-content: center;
         height: 100vh;
-        overflow: hidden;
+      }
+
+      .control-overlay {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 0;
+      }
+
+      @media (hover: hover) {
+        .control-overlay {
+          display: none;
+        }
+      }
+
+      .control-overlay > .left,
+      .control-overlay > .right {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 0 1rem;
+      }
+
+      .control-overlay > .right {
+        flex-direction: column;
+      }
+
+      .control-overlay > .left > button,
+      .control-overlay > .right > button {
+        background-color: #0f172a99;
+        padding: 8px 12px;
+        font-size: xx-large;
       }
     </style>
   </head>
   <body>
-    <canvas></canvas>
+    <canvas> </canvas>
+
+    <div class="control-overlay">
+      <div class="left">
+        <button id="left">👈</button>
+        <button id="right">👉</button>
+      </div>
+      <div class="right">
+        <button id="up">☝️</button>
+        <button id="down">👇</d>
+      </div>
+    </div>
   </body>
 </html>
