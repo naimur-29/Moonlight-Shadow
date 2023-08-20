@@ -1,99 +1,65 @@
-// EVENT LISTENERS:
+// PC EVENT:
 window.addEventListener("keydown", (event) => {
   event.preventDefault();
-  KEYS.latest.key = event.key.toLowerCase();
 
-  switch (event.key.toLowerCase()) {
-    case "w":
-      KEYS.w.pressed = true;
-      break;
-    case "a":
-      KEYS.a.pressed = true;
-      break;
-    case "s":
-      KEYS.s.pressed = true;
-      break;
-    case "d":
-      KEYS.d.pressed = true;
-      break;
+  if (
+    !KEYS.latest.length ||
+    KEYS.latest[KEYS.latest.length - 1] !== event.key.toLocaleLowerCase()
+  ) {
+    KEYS.latest.push(event.key.toLowerCase());
+    console.log(KEYS.latest);
   }
 });
 
 window.addEventListener("keyup", (event) => {
   event.preventDefault();
-
-  switch (event.key.toLowerCase()) {
-    case "w":
-      KEYS.w.pressed = false;
-      break;
-    case "a":
-      KEYS.a.pressed = false;
-      break;
-    case "s":
-      KEYS.s.pressed = false;
-      break;
-    case "d":
-      KEYS.d.pressed = false;
-      break;
-  }
+  KEYS.latest.length &&
+    KEYS.latest.splice(KEYS.latest.lastIndexOf(event.key.toLowerCase()), 1);
 });
 
-// phone buttons:
+// PHONE EVENTS:
+function recordKey(event, key) {
+  event.preventDefault();
+
+  if (KEYS.latest[KEYS.latest.length - 1] !== key) {
+    KEYS.latest.push(key);
+  }
+}
+
+function removeLatestRecord(event, key) {
+  event.preventDefault();
+
+  if (KEYS.latest.length) {
+    KEYS.latest.splice(KEYS.latest.lastIndexOf(key), 1);
+  }
+}
+
 // UP
-document.querySelector("#up").onpointerdown = function (e) {
-  e.preventDefault();
+document.querySelector("#up").onpointerdown = (event) => recordKey(event, "w");
 
-  KEYS.latest.key = "w";
-  KEYS.w.pressed = true;
-};
-
-document.querySelector("#up").onpointerup = function (e) {
-  e.preventDefault();
-
-  KEYS.w.pressed = false;
-};
+document.querySelector("#up").onpointerup = (event) =>
+  removeLatestRecord(event, "w");
 
 // LEFT
-document.querySelector("#left").onpointerdown = function (e) {
-  e.preventDefault();
+document.querySelector("#left").onpointerdown = (event) =>
+  recordKey(event, "a");
 
-  KEYS.latest.key = "a";
-  KEYS.a.pressed = true;
-};
-
-document.querySelector("#left").onpointerup = function (e) {
-  e.preventDefault();
-
-  KEYS.a.pressed = false;
-};
+document.querySelector("#left").onpointerup = (event) =>
+  removeLatestRecord(event, "a");
 
 // DOWN
-document.querySelector("#down").onpointerdown = function (e) {
-  e.preventDefault();
+document.querySelector("#down").onpointerdown = (event) =>
+  recordKey(event, "s");
 
-  KEYS.latest.key = "s";
-  KEYS.s.pressed = true;
-};
-
-document.querySelector("#down").onpointerup = function (e) {
-  e.preventDefault();
-
-  KEYS.s.pressed = false;
-};
+document.querySelector("#down").onpointerup = (event) =>
+  removeLatestRecord(event, "s");
 
 // RIGHT
-document.querySelector("#right").onpointerdown = function (e) {
-  e.preventDefault();
+document.querySelector("#right").onpointerdown = (event) =>
+  recordKey(event, "d");
 
-  KEYS.latest.key = "d";
-  KEYS.d.pressed = true;
-};
-
-document.querySelector("#right").onpointerup = function (e) {
-  e.preventDefault();
-
-  KEYS.d.pressed = false;
-};
+document.querySelector("#right").onpointerup = (event) =>
+  removeLatestRecord(event, "d");
 
 // GLOBAL FUNCTIONS:
 function playerCollisionDetection({ player, boundary }) {
@@ -108,7 +74,7 @@ function playerCollisionDetection({ player, boundary }) {
 function handlePlayerControl() {
   PLAYER.sprite.isMoving = false;
   let isTouchingBoundary = false;
-  if (KEYS.w.pressed && KEYS.latest.key === "w") {
+  if (KEYS.latest.length && KEYS.latest[KEYS.latest.length - 1] === "w") {
     PLAYER.sprite.isMoving = true;
     PLAYER.sprite.image = PLAYER.sprite.sprites.up;
 
@@ -135,7 +101,10 @@ function handlePlayerControl() {
 
     if (!isTouchingBoundary)
       MOVABLES.forEach((m) => (m.pos.y += PLAYER.stats.speed.y));
-  } else if (KEYS.a.pressed && KEYS.latest.key === "a") {
+  } else if (
+    KEYS.latest.length &&
+    KEYS.latest[KEYS.latest.length - 1] === "a"
+  ) {
     PLAYER.sprite.isMoving = true;
     PLAYER.sprite.image = PLAYER.sprite.sprites.left;
 
@@ -162,7 +131,10 @@ function handlePlayerControl() {
 
     if (!isTouchingBoundary)
       MOVABLES.forEach((m) => (m.pos.x += PLAYER.stats.speed.x));
-  } else if (KEYS.s.pressed && KEYS.latest.key === "s") {
+  } else if (
+    KEYS.latest.length &&
+    KEYS.latest[KEYS.latest.length - 1] === "s"
+  ) {
     PLAYER.sprite.isMoving = true;
     PLAYER.sprite.image = PLAYER.sprite.sprites.down;
 
@@ -189,7 +161,10 @@ function handlePlayerControl() {
 
     if (!isTouchingBoundary)
       MOVABLES.forEach((m) => (m.pos.y -= PLAYER.stats.speed.y));
-  } else if (KEYS.d.pressed && KEYS.latest.key === "d") {
+  } else if (
+    KEYS.latest.length &&
+    KEYS.latest[KEYS.latest.length - 1] === "d"
+  ) {
     PLAYER.sprite.isMoving = true;
     PLAYER.sprite.image = PLAYER.sprite.sprites.right;
 

@@ -5,7 +5,12 @@ canvas.width = 1024;
 canvas.height = 576;
 
 // STATES:
+// day & night cycle:
 let isNight = true;
+// keeping track of if any movement keys are pressed:
+const KEYS = {
+  latest: [],
+};
 
 // load images:
 // BACKGROUND:
@@ -90,25 +95,6 @@ const PLAYER = new Player({
     },
   },
 });
-
-// keeping track of if any movement keys are pressed:
-const KEYS = {
-  latest: {
-    key: "",
-  },
-  w: {
-    pressed: false,
-  },
-  a: {
-    pressed: false,
-  },
-  s: {
-    pressed: false,
-  },
-  d: {
-    pressed: false,
-  },
-};
 
 // map boundary:
 const boundaries = [];
