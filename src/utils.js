@@ -7,7 +7,6 @@ window.addEventListener("keydown", (event) => {
     KEYS.latest[KEYS.latest.length - 1] !== event.key.toLocaleLowerCase()
   ) {
     KEYS.latest.push(event.key.toLowerCase());
-    console.log(KEYS.latest);
   }
 });
 
@@ -76,7 +75,9 @@ function handlePlayerControl() {
   let isTouchingBoundary = false;
   if (KEYS.latest.length && KEYS.latest[KEYS.latest.length - 1] === "w") {
     PLAYER.sprite.isMoving = true;
-    PLAYER.sprite.image = PLAYER.sprite.sprites.up;
+    PLAYER.sprite.image = IS_NIGHT
+      ? PLAYER.sprite.sprites.upNight
+      : PLAYER.sprite.sprites.up;
 
     for (let i = 0; i < boundaries.length; i++) {
       const boundary = boundaries[i];
@@ -106,7 +107,9 @@ function handlePlayerControl() {
     KEYS.latest[KEYS.latest.length - 1] === "a"
   ) {
     PLAYER.sprite.isMoving = true;
-    PLAYER.sprite.image = PLAYER.sprite.sprites.left;
+    PLAYER.sprite.image = IS_NIGHT
+      ? PLAYER.sprite.sprites.leftNight
+      : PLAYER.sprite.sprites.left;
 
     for (let i = 0; i < boundaries.length; i++) {
       const boundary = boundaries[i];
@@ -136,7 +139,9 @@ function handlePlayerControl() {
     KEYS.latest[KEYS.latest.length - 1] === "s"
   ) {
     PLAYER.sprite.isMoving = true;
-    PLAYER.sprite.image = PLAYER.sprite.sprites.down;
+    PLAYER.sprite.image = IS_NIGHT
+      ? PLAYER.sprite.sprites.downNight
+      : PLAYER.sprite.sprites.down;
 
     for (let i = 0; i < boundaries.length; i++) {
       const boundary = boundaries[i];
@@ -166,7 +171,9 @@ function handlePlayerControl() {
     KEYS.latest[KEYS.latest.length - 1] === "d"
   ) {
     PLAYER.sprite.isMoving = true;
-    PLAYER.sprite.image = PLAYER.sprite.sprites.right;
+    PLAYER.sprite.image = IS_NIGHT
+      ? PLAYER.sprite.sprites.rightNight
+      : PLAYER.sprite.sprites.right;
 
     for (let i = 0; i < boundaries.length; i++) {
       const boundary = boundaries[i];
@@ -191,5 +198,48 @@ function handlePlayerControl() {
 
     if (!isTouchingBoundary)
       MOVABLES.forEach((m) => (m.pos.x -= PLAYER.stats.speed.x));
+  }
+}
+
+function handleDayNight() {
+  console.log("triggered!");
+  if (IS_NIGHT) {
+    // map:
+    BACKGROUND.image = BACKGROUND.sprites.night;
+    FOREGROUND.image = FOREGROUND.sprites.night;
+    // player:
+    switch (PLAYER.sprite.image) {
+      case PLAYER.sprite.sprites.up:
+        PLAYER.sprite.image = PLAYER.sprite.sprites.upNight;
+        break;
+      case PLAYER.sprite.sprites.left:
+        PLAYER.sprite.image = PLAYER.sprite.sprites.leftNight;
+        break;
+      case PLAYER.sprite.sprites.down:
+        PLAYER.sprite.image = PLAYER.sprite.sprites.downNight;
+        break;
+      case PLAYER.sprite.sprites.right:
+        PLAYER.sprite.image = PLAYER.sprite.sprites.rightNight;
+        break;
+    }
+  } else {
+    // map:
+    BACKGROUND.image = BACKGROUND.sprites.day;
+    FOREGROUND.image = FOREGROUND.sprites.day;
+    // player:
+    switch (PLAYER.sprite.image) {
+      case PLAYER.sprite.sprites.upNight:
+        PLAYER.sprite.image = PLAYER.sprite.sprites.up;
+        break;
+      case PLAYER.sprite.sprites.leftNight:
+        PLAYER.sprite.image = PLAYER.sprite.sprites.left;
+        break;
+      case PLAYER.sprite.sprites.downNight:
+        PLAYER.sprite.image = PLAYER.sprite.sprites.down;
+        break;
+      case PLAYER.sprite.sprites.rightNight:
+        PLAYER.sprite.image = PLAYER.sprite.sprites.right;
+        break;
+    }
   }
 }

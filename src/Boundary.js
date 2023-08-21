@@ -9,7 +9,7 @@ class Boundary {
   }
 
   draw() {
-    c.fillStyle = "rgba(255, 100, 150)";
+    c.fillStyle = "rgba(255, 100, 150, 0.7)";
     c.fillRect(this.pos.x, this.pos.y, this.width, this.height);
   }
 }

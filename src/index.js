@@ -6,7 +6,11 @@ canvas.height = 576;
 
 // STATES:
 // day & night cycle:
-let isNight = true;
+let IS_NIGHT = false;
+let PREV_IS_NIGHT = IS_NIGHT;
+setInterval(() => {
+  IS_NIGHT = !IS_NIGHT;
+}, 60000);
 // keeping track of if any movement keys are pressed:
 const KEYS = {
   latest: [],
@@ -15,64 +19,56 @@ const KEYS = {
 // load images:
 // BACKGROUND:
 const backgroundImg = new Image();
-backgroundImg.src = isNight
-  ? "./assets/level_01_night.png"
-  : "./assets/level_01.png";
+backgroundImg.src = "./assets/level_01.png";
+
+const backgroundImgNight = new Image();
+backgroundImgNight.src = "./assets/level_01_night.png";
 
 // foreground:
 const foregroundImg = new Image();
-foregroundImg.src = isNight
-  ? "./assets/level_01_foreground_night.png"
-  : "./assets/level_01_foreground.png";
+foregroundImg.src = "./assets/level_01_foreground.png";
+
+const foregroundImgNight = new Image();
+foregroundImgNight.src = "./assets/level_01_foreground_night.png";
 
 // player:
+// down:
 const playerDownImage = new Image();
-playerDownImage.src = isNight
-  ? "./assets/playerDownNight.png"
-  : "./assets/playerDown.png";
+playerDownImage.src = "./assets/playerDown.png";
 
+const playerDownImageNight = new Image();
+playerDownImageNight.src = "./assets/playerDownNight.png";
+
+// up:
 const playerUpImage = new Image();
-playerUpImage.src = isNight
-  ? "./assets/playerUpNight.png"
-  : "./assets/playerUp.png";
+playerUpImage.src = "./assets/playerUp.png";
 
+const playerUpImageNight = new Image();
+playerUpImageNight.src = "./assets/playerUpNight.png";
+
+// left:
 const playerLeftImage = new Image();
-playerLeftImage.src = isNight
-  ? "./assets/playerLeftNight.png"
-  : "./assets/playerLeft.png";
+playerLeftImage.src = "./assets/playerLeft.png";
 
+const playerLeftImageNight = new Image();
+playerLeftImageNight.src = "./assets/playerLeftNight.png";
+
+// right:
 const playerRightImage = new Image();
-playerRightImage.src = isNight
-  ? "./assets/playerRightNight.png"
-  : "./assets/playerRight.png";
+playerRightImage.src = "./assets/playerRight.png";
+
+const playerRightImageNight = new Image();
+playerRightImageNight.src = "./assets/playerRightNight.png";
 
 // GLOBAL VARIABLES/CONSTANTS:
 const OFFSET = {
   x: -700,
-  y: -710,
+  y: -700,
 };
 
 let MOVABLES = [];
 
-// map:
-const BACKGROUND = new Sprite({
-  img: backgroundImg,
-  pos: {
-    x: OFFSET.x,
-    y: OFFSET.y,
-  },
-});
-MOVABLES.push(BACKGROUND);
-
-const FOREGROUND = new Sprite({
-  img: foregroundImg,
-  pos: {
-    x: OFFSET.x,
-    y: OFFSET.y,
-  },
-});
-MOVABLES.push(FOREGROUND);
-
+// PLAYER:
 const PLAYER = new Player({
   sprite: new AnimatedSprite({
     img: playerDownImage,
@@ -83,9 +79,13 @@ const PLAYER = new Player({
     },
     sprites: {
       up: playerUpImage,
+      upNight: playerUpImageNight,
       down: playerDownImage,
+      downNight: playerDownImageNight,
       left: playerLeftImage,
+      leftNight: playerLeftImageNight,
       right: playerRightImage,
+      rightNight: playerRightImageNight,
     },
   }),
   stats: {
@@ -95,6 +95,34 @@ const PLAYER = new Player({
     },
   },
 });
+
+// map:
+const BACKGROUND = new Sprite({
+  img: backgroundImg,
+  pos: {
+    x: OFFSET.x,
+    y: OFFSET.y,
+  },
+  sprites: {
+    day: backgroundImg,
+    night: backgroundImgNight,
+  },
+});
+MOVABLES.push(BACKGROUND);
+
+const FOREGROUND = new Sprite({
+  img: foregroundImg,
+  pos: {
+    x: OFFSET.x,
+    y: OFFSET.y,
+  },
+  alpha: 0.7,
+  sprites: {
+    day: foregroundImg,
+    night: foregroundImgNight,
+  },
+});
+MOVABLES.push(FOREGROUND);
 
 // map boundary:
 const boundaries = [];
@@ -122,16 +150,21 @@ MOVABLES = [...MOVABLES, ...boundaries];
 
 // animation loop:
 function animate() {
+  // handle day night cycle:
+  if (IS_NIGHT !== PREV_IS_NIGHT) {
+    handleDayNight();
+    PREV_IS_NIGHT = IS_NIGHT;
+  }
+
   BACKGROUND.draw();
-  // draw boundaries:
-  //   boundaries.forEach((b) => {
-  //     b.draw();
-  //   });
   handlePlayerControl();
   PLAYER.draw();
-  c.globalAlpha = 0.7;
   FOREGROUND.draw();
-  c.globalAlpha = 1;
+
+  // draw boundaries:
+  // boundaries.forEach((b) => {
+  //   b.draw();
+  // });
 
   window.requestAnimationFrame(animate);
 }
