@@ -1,13 +1,14 @@
 const canvas = document.querySelector("canvas");
 const c = canvas.getContext("2d");
+const ctrl = document.querySelector(".control-overlay");
 
 canvas.width = 1024;
 canvas.height = 576;
 
 // STATES:
 // day & night cycle:
-let IS_NIGHT = false;
-let PREV_IS_NIGHT = IS_NIGHT;
+let IS_NIGHT = true;
+let PREV_IS_NIGHT = false;
 let FRAME = 0;
 // keeping track of if any movement keys are pressed:
 const KEYS = {
@@ -146,6 +147,34 @@ collisionsMap.forEach((row, i) => {
 });
 MOVABLES = [...MOVABLES, ...boundaries];
 
+// projectiles:
+let projectiles = [];
+
+window.addEventListener("pointerdown", (event) => {
+  const angle = Math.atan2(
+    event.clientY - PLAYER.sprite.pos.y,
+    event.clientX - PLAYER.sprite.pos.x
+  );
+
+  const vel = {
+    x: Math.cos(angle) * 5,
+    y: Math.sin(angle) * 5,
+  };
+
+  const p = new Projectile({
+    pos: {
+      x: PLAYER.sprite.pos.x + PLAYER.sprite.width / 2,
+      y: PLAYER.sprite.pos.y + PLAYER.sprite.height / 2,
+    },
+    vel: {
+      ...vel,
+    },
+    radius: 3,
+  });
+  projectiles.push(p);
+  console.log(p.pos);
+});
+
 // animation loop:
 function animate() {
   // handle day night cycle:
@@ -162,9 +191,18 @@ function animate() {
   }
 
   BACKGROUND.draw();
+
   handlePlayerControl();
   PLAYER.draw();
+
   FOREGROUND.draw();
+
+  // projectiles:
+  projectiles.forEach((p) => {
+    p.update();
+  });
+
+  // console.log(projectiles);
 
   // draw boundaries:
   // boundaries.forEach((b) => {
