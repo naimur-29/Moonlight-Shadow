@@ -8,9 +8,7 @@ canvas.height = 576;
 // day & night cycle:
 let IS_NIGHT = false;
 let PREV_IS_NIGHT = IS_NIGHT;
-setInterval(() => {
-  IS_NIGHT = !IS_NIGHT;
-}, 60000);
+let FRAME = 0;
 // keeping track of if any movement keys are pressed:
 const KEYS = {
   latest: [],
@@ -151,6 +149,13 @@ MOVABLES = [...MOVABLES, ...boundaries];
 // animation loop:
 function animate() {
   // handle day night cycle:
+  FRAME++;
+
+  if (FRAME >= 30000) {
+    FRAME = 0;
+    IS_NIGHT = !IS_NIGHT;
+  }
+
   if (IS_NIGHT !== PREV_IS_NIGHT) {
     handleDayNight();
     PREV_IS_NIGHT = IS_NIGHT;
